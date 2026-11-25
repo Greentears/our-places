@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Our Places</title>
+  <meta name="theme-color" content="#c8553d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Our Places">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sign in -->
+  <div id="auth" class="screen hidden">
+    <form id="authForm" class="authBox" autocomplete="on">
+      <div class="logo">📍</div>
+      <h1>Our Places</h1>
+      <p class="muted">Your shared list of bars &amp; restaurants.</p>
+      <input id="authEmail" type="email" placeholder="Email" autocomplete="email" required>
+      <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
+      <button class="btn primary" id="authBtn" type="submit">Sign in</button>
+      <p id="authErr" class="err"></p>
+      <button type="button" class="link" id="authToggle">First time? Create the account</button>
+    </form>
+  </div>
+
+  <!-- Setup message (shown if firebase-config.js is not filled in) -->
+  <div id="setup" class="screen hidden">
+    <div class="authBox">
+      <h1>Almost there</h1>
+      <p>Open <code>firebase-config.js</code> and paste your Firebase settings.<br>The README explains how, in 5 minutes.</p>
+    </div>
+  </div>
+
+  <!-- Main app -->
+  <div id="app" class="hidden">
+    <header>
+      <div class="hrow">
+        <select id="citySel" aria-label="City"></select>
+        <button id="locBtn" class="iconbtn" aria-label="Use my location" title="Use my location">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg>
+        </button>
+        <button id="filterBtn" class="btn small">Filters<b id="fcount" class="hidden"></b></button>
+      </div>
+      <div class="hrow">
+        <input id="q" type="search" placeholder="Search name, cuisine, notes…" enterkeyhint="search">
+      </div>
+      <div id="roBanner" class="roBanner hidden"></div>
+    </header>
+
+    <main>
+      <section id="listView">
+        <div id="count" class="count"></div>
+        <div id="list"></div>
+      </section>
+      <section id="mapView" class="hidden">
+        <div id="map"></div>
+        <button id="mapLoc" class="mapbtn" aria-label="Center on me">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </button>
+      </section>
+    </main>
+
+    <nav>
+      <button data-view="list" class="on"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>List</button>
+      <button data-view="map"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Map</button>
+      <button id="addBtn" class="fab edit-only" aria-label="Add a place"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button id="randBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>Random</button>
+      <button id="moreBtn" class="edit-only"><svg viewBox="0 0 24 24" class="dots"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg>More</button>
+    </nav>
+  </div>
+
+  <!-- Bottom sheet used for details, forms, filters, menu -->
+  <div id="sheet" class="sheet">
+    <div class="panel">
+      <div class="grab"></div>
+      <button id="sheetClose" class="x" aria-label="Close">×</button>
+      <div id="sheetBody"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <input id="importFile" type="file" accept="application/json,.json" class="hidden">
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

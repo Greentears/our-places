@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Only the two of you. Replace both emails with the ones you sign in with (lowercase).
+    function allowed() {
+      return request.auth != null
+        && request.auth.token.email in ['you@example.com', 'partner@example.com'];
+    }
+
+    match /places/{id}  { allow read, write: if allowed(); }
+    match /photos/{id}  { allow read, write: if allowed(); }
+    match /meta/{id}    { allow read, write: if allowed(); }
+
+    // Shared read-only lists: anyone with the (unguessable) link can open one, only you can create/delete.
+    match /shares/{id} {
+      allow get: if true;
+      allow list, write: if allowed();
+    }
+  }
+}
