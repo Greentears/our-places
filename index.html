@@ -25,8 +25,12 @@
       <p class="muted">Your shared list of bars &amp; restaurants.</p>
       <input id="authEmail" type="email" placeholder="Email" autocomplete="email" required>
       <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
+      <input id="authPass2" class="hidden" type="password" placeholder="Confirm password" autocomplete="new-password">
+      <button type="button" class="link" id="authShow">Show password</button>
       <button class="btn primary" id="authBtn" type="submit">Sign in</button>
       <p id="authErr" class="err"></p>
+      <p id="authInfo" class="info-ok"></p>
+      <button type="button" class="link" id="authForgot">Forgot password?</button>
       <button type="button" class="link" id="authToggle">First time? Create the account</button>
     </form>
   </div>

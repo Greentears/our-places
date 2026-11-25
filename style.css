@@ -34,6 +34,8 @@ code { background: var(--line); padding: 1px 6px; border-radius: 6px; }
 .authBox h1 { margin: 0; font-size: 28px; }
 .authBox .logo { font-size: 44px; }
 .err { color: var(--bad); min-height: 1.2em; margin: 0; font-size: 14px; }
+.info-ok { color: var(--ok); margin: 0; font-size: 14px; }
+.info-ok:empty, .err:empty { display: none; }
 .link { background: none; border: 0; color: var(--accent); padding: 6px; }
 .fatal { padding: 40px 24px; text-align: center; color: var(--muted); }
 

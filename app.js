@@ -4,7 +4,7 @@ import {
 } from './lib.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut,
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail,
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {
   initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc,
@@ -856,14 +856,35 @@ $('#authToggle').addEventListener('click', () => {
   $('#authBtn').textContent = signUp ? 'Create account' : 'Sign in';
   $('#authToggle').textContent = signUp ? 'Already have an account? Sign in' : 'First time? Create the account';
   $('#authPass').autocomplete = signUp ? 'new-password' : 'current-password';
+  $('#authPass2').classList.toggle('hidden', !signUp);
+  $('#authForgot').classList.toggle('hidden', signUp);
+  $('#authPass2').value = '';
   $('#authErr').textContent = '';
+  $('#authInfo').textContent = '';
+});
+$('#authShow').addEventListener('click', () => {
+  const show = $('#authPass').type === 'password';
+  $('#authPass').type = $('#authPass2').type = show ? 'text' : 'password';
+  $('#authShow').textContent = show ? 'Hide password' : 'Show password';
+});
+$('#authForgot').addEventListener('click', async () => {
+  $('#authErr').textContent = '';
+  $('#authInfo').textContent = '';
+  const em = $('#authEmail').value.trim();
+  if (!em) { $('#authErr').textContent = 'Type your email above first, then tap “Forgot password?”.'; return; }
+  try {
+    await sendPasswordResetEmail(auth, em);
+    $('#authInfo').textContent = 'If this email has an account, a reset link is on its way. Check your spam folder too.';
+  } catch (err) { $('#authErr').textContent = authMsg[err.code] || err.code || 'Something went wrong'; }
 });
 $('#authForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   $('#authErr').textContent = '';
+  $('#authInfo').textContent = '';
+  const em = $('#authEmail').value.trim(), pw = $('#authPass').value;
+  if (signUp && pw !== $('#authPass2').value) { $('#authErr').textContent = 'The two passwords do not match.'; return; }
   $('#authBtn').disabled = true;
   try {
-    const em = $('#authEmail').value.trim(), pw = $('#authPass').value;
     if (signUp) await createUserWithEmailAndPassword(auth, em, pw);
     else await signInWithEmailAndPassword(auth, em, pw);
   } catch (err) { $('#authErr').textContent = authMsg[err.code] || err.code || 'Something went wrong'; }
